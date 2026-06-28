@@ -1,5 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import urlRouter from './routes/url.router.js'
+
 
 dotenv.config();
 const app = express();
@@ -12,10 +14,7 @@ app.get('/api/health',(req,res) => {
     res.json({status: "ok"})
 })
 
-app.post('/api/shorten', async (req,res) => {
-    const { longURL } = req.body;
-
-});
+app.use('/api/url',urlRouter);
 
 
 app.listen(PORT, ()=>{
