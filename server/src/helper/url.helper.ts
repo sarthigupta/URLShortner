@@ -6,3 +6,4 @@ export async function shortenUrl(longURL: string) {
 }
 
 
+export const CACHE_TTL = 60 * 60 * 24;
