@@ -4,6 +4,8 @@ import axios from "axios";
 const App = () => {
   const [url, setUrl] = React.useState<string>("");
   const [input, setInput] = React.useState<string>("");
+  const [error,setError] = React.useState<string>("");
+
   async function handleShortenUrl(longURL: string) {
     try {
       const res = await axios.post("http://localhost:3000/api/url/shorten", {
@@ -12,6 +14,14 @@ const App = () => {
       setUrl(res.data.shortURL);
     } catch (error) {
       console.error("Error shortening URL:", error);
+      if (axios.isAxiosError(error) && error.response?.status==429) {
+        setError(error.response.data.error);
+        setTimeout(() => {
+          setError("");
+        }, 5000);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   }
   const handleRedirect = (shortURL: string) => {
@@ -43,6 +53,7 @@ const App = () => {
       >
         Shorten
       </button>
+      {error && <p className="text-red-500 mt-4">{error}</p>}
       <p className="mt-4">{url}</p>
       <button
         className="border rounded-xl w-20 mt-4"
