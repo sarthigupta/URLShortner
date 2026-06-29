@@ -1,0 +1,53 @@
+services:
+  client:
+    build: ./client
+    container_name: url-shortener-client
+    restart: always
+
+    depends_on:
+      - server
+
+  server:
+    build: ./server
+    container_name: url-shortener-server
+    restart: always
+
+    env_file:
+      - ./server/.env
+
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: url-shortener-db
+    restart: always
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: url_db
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:latest
+    container_name: url-shortener-nginx
+    restart: always
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+
+    depends_on:
+      - client
+      - server
+
+volumes:
+  postgres_data:

@@ -8,7 +8,7 @@ const App = () => {
 
   async function handleShortenUrl(longURL: string) {
     try {
-      const res = await axios.post("http://localhost:3000/api/url/shorten", {
+      const res = await axios.post(`api/url/shorten`, {
         longURL,
       });
       setUrl(res.data.shortURL);
@@ -26,7 +26,7 @@ const App = () => {
   }
   const handleRedirect = (shortURL: string) => {
     try {
-      window.location.href = `http://localhost:3000/api/url/${shortURL}`;
+      window.location.href = `/api/url/${shortURL}`;
     } catch (error) {
       console.log("error in handleRedirect", error);
     }
